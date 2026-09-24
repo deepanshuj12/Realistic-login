@@ -1,18 +1,38 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // const handleSubmit= async (e)=>{
-  //   Navigate("#")
-  // }
+  const [formData,setformData] = useState({
+    email: "",
+    password: ""
+  })
+  const navigate=useNavigate()
+  async function handleSubmit(e){
+    const response= await fetch(`https://localhost:3000/api/login`, {
+      method:"POST" ,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body:JSON.stringify({email:formData.email,password:formData.password})
+    })
+    const json=await response.json()
+    if (!json.success){
+      alert("enter valid")
+    }
+    else{
+    //  navigate("/loggedpage")
+    navigate("/")
+    }
+    
+  }
+  function handleChange(e){
+    setformData({...formData,[e.target.name]:[e.target.value]})
+  }
   return ( 
   <div className="py-9">
     <form className="flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-88
      text-gray-500 rounded-lg shadow-xl border border-gray-200 bg-white"
-    //  onSubmit={handleSubmit}
+     onSubmit={handleSubmit}
      >
       <p className="text-2xl font-medium m-auto">
         <span className="text-blue-500">Login</span>
@@ -20,8 +40,9 @@ function Login() {
       <div className="w-full ">
         <p>Email</p>
         <input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          onChange={handleChange}
+          value={formData.email}
+          name="email"
           placeholder="type here"
           className="border border-gray-200 rounded w-full p-2 mt-1 outline-blue-500"
           type="email"
@@ -31,8 +52,9 @@ function Login() {
       <div className="w-full ">
         <p>Password</p>
         <input
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          onChange={handleChange}
+          value={formData.password}
+          name="password"
           placeholder="type here"
           className="border border-gray-200 rounded w-full p-2 mt-1 outline-blue-500"
           type="password"
