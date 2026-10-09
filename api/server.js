@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-const uri='mongodb+srv://ddeeppanshuj229_db_user:ybV0a5XcoBgs9RN8@cluster.yburbtd.mongodb.net/?appName=Cluster'
+const uri= process.env.MONGO_URI
 
 function server(){
 mongoose.connect(uri)
